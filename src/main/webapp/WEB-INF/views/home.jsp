@@ -91,7 +91,7 @@
                 datatype: "json",
                 colNames: ["닉네임", "레벨", "직업", "무릉"],
                 colModel: [
-                    { name: 'nickName', key: true, width: 150, sortable:false },
+                    { name: 'nickname', key: true, width: 150, sortable:false },
                     { name: 'level', width: 75, align:"right", sortable:false },
                     { name: 'job', width: 150, sortable:false },
                     { name: 'spec', width: 300, sortable:false }
@@ -100,43 +100,43 @@
                 height: 500,
                 rowNum: 300,
                 multiselect: true,
-                loadComplete: function(data){
-                	$("#subGrid").jqGrid({
-                        url: '/supselect',
-                        mtype: "GET",
-                        datatype: "json",
-                        colNames: ["닉네임", "레벨", "직업", "무릉"],
-                        colModel: [
-                            { name: 'nickName', key: true, width: 150, sortable:false },
-                            { name: 'level', width: 75, align:"right", sortable:false },
-                            { name: 'job', width: 150, sortable:false },
-                            { name: 'spec', width: 300, sortable:false }
-                        ],
-                        viewrecords: true,
-                        height: 500,
-                        rowNum: 300,
-                        multiselect: true,
-                        onSelectRow: function(rowid, status, e) {
-                        	var all = jQuery("#jqGrid").jqGrid('getGridParam', 'selarrrow');
-                        	var sup = jQuery("#subGrid").jqGrid('getGridParam', 'selarrrow');
-                        	console.log(all.length + sup.length);
-                        	if(all.length + sup.length == 7){
-                        		alert('6명까지만 선택가능합니다.');
-                        		$('#subGrid').jqGrid('setSelection', rowid).prop('checkbox', false);
-                        	}else if(all.length + sup.length > 7){
-                        		alert('다시 선택해주세요.');
-                        		$("#jqGrid").jqGrid("resetSelection");
-                        		$("#subGrid").jqGrid("resetSelection");
-                        	}
-                          },
-                    });
-                },
+                
                 onSelectRow: function(rowid, status, e) {
                 	var all = jQuery("#jqGrid").jqGrid('getGridParam', 'selarrrow');
                 	var sup = jQuery("#subGrid").jqGrid('getGridParam', 'selarrrow');
                 	if(all.length + sup.length == 7){
                 		alert('6명까지만 선택가능합니다.');
                 		$('#jqGrid').jqGrid('setSelection', rowid).prop('checkbox', false);
+                	}else if(all.length + sup.length > 7){
+                		alert('다시 선택해주세요.');
+                		$("#jqGrid").jqGrid("resetSelection");
+                		$("#subGrid").jqGrid("resetSelection");
+                	}
+                  },
+            });
+            
+            $("#subGrid").jqGrid({
+                url: '/supselect',
+                mtype: "GET",
+                datatype: "json",
+                colNames: ["닉네임", "레벨", "직업", "무릉"],
+                colModel: [
+                    { name: 'nickname', key: true, width: 150, sortable:false },
+                    { name: 'level', width: 75, align:"right", sortable:false },
+                    { name: 'job', width: 150, sortable:false },
+                    { name: 'spec', width: 300, sortable:false }
+                ],
+                viewrecords: true,
+                height: 500,
+                rowNum: 300,
+                multiselect: true,
+                onSelectRow: function(rowid, status, e) {
+                	var all = jQuery("#jqGrid").jqGrid('getGridParam', 'selarrrow');
+                	var sup = jQuery("#subGrid").jqGrid('getGridParam', 'selarrrow');
+                	console.log(all.length + sup.length);
+                	if(all.length + sup.length == 7){
+                		alert('6명까지만 선택가능합니다.');
+                		$('#subGrid').jqGrid('setSelection', rowid).prop('checkbox', false);
                 	}else if(all.length + sup.length > 7){
                 		alert('다시 선택해주세요.');
                 		$("#jqGrid").jqGrid("resetSelection");

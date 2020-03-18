@@ -1,16 +1,27 @@
 package com.guringnae.guildspec;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
+
 public class SpecDTO {
-	private String nickName;
+	@JsonProperty(value="nickname")
+	private String nickname;
+	@JsonProperty(value="level")
 	private String level;
+	@JsonProperty(value="job")
 	private String job;
+	@JsonProperty(value="floor")
 	private int floor;
+	@JsonProperty(value="time")
 	private int time;
-	public String getNickName() {
-		return nickName;
+	@JsonProperty(value="spec")
+	private String spec;
+	
+	public String getNickname() {
+		return nickname;
 	}
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 	public String getLevel() {
 		return level;
@@ -42,6 +53,5 @@ public class SpecDTO {
 	public void setSpec(String spec) {
 		this.spec = spec;
 	}
-	private String spec;
 	
 }
