@@ -1,21 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" media="screen" href="/resources/css/jquery-ui.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/resources/css/ui.jqgrid.css" />
+    <link rel="shortcut icon" href="#">
     
-    <script type="text/javascript" src="/resources/js/jquery-3.2.1.js"></script> 
-    <script type="text/javascript" src="/resources/js/i18n/grid.locale-kr.js"></script>
-    <script type="text/javascript" src="/resources/js/jquery.jqGrid.min.js"></script>
+    <link rel="stylesheet" href="/resources/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/resources/css/jquery-ui.css"/> 
+    <link rel="stylesheet" href="/resources/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="/resources/css/dataTables.bootstrap.min.css"/>
+    
+    <script src="/resources/js/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="/resources/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="/resources/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
     
     <meta charset="utf-8" />
 	<title>뒤에서 수로용</title>
 </head>
 <body>
 <h3>데이터 출처 : maple.gg</h3>
+<h3>데이터는 매 정각에 자동 저장됩니다.</h3>
+<h3>1~6명 선택 후 우측상단 수로 선택 후 저장버튼 클릭시 GRID아래 복사하기 쉽게 표시</h3>
 <table>
 <tr>
-<td>
+<td style="vertical-align:top">
 	<table>
 	<tr>
 	<td>
@@ -26,8 +32,17 @@
 	</td>
 	</tr>
 	<tr>
-	<td colspan="2">
-	<table id="jqGrid"></table>
+	<td colspan="2" >
+	<table id="attGrid"  class="table table-striped table-bordered" >
+	<thead>
+		<tr>
+			<th>닉네임</th>
+			<th>레벨</th>
+			<th>직업</th>
+			<th>무릉</th>
+		</tr>
+	</thead>
+	</table>
 	</td>
 	</tr>
 	</table>
@@ -60,7 +75,16 @@
 	</tr>
 	<tr>
 	<td colspan="2">
-	<table id="subGrid"></table>
+	<table id="subGrid"  class="table table-striped table-bordered" >
+	<thead>
+		<tr>
+			<th>닉네임</th>
+			<th>레벨</th>
+			<th>직업</th>
+			<th>무릉</th>
+		</tr>
+	</thead>
+	</table>
 	</td>
 	</tr>
 </table>
@@ -84,98 +108,137 @@
 </tr>
 </table>
  <script type="text/javascript"> 
-        $(document).ready(function () {
-            $("#jqGrid").jqGrid({
-                url: '/select',
-                mtype: "GET",
-                datatype: "json",
-                colNames: ["닉네임", "레벨", "직업", "무릉"],
-                colModel: [
-                    { name: 'nickname', key: true, width: 150, sortable:false },
-                    { name: 'level', width: 75, align:"right", sortable:false },
-                    { name: 'job', width: 150, sortable:false },
-                    { name: 'spec', width: 300, sortable:false }
-                ],
-                viewrecords: true,
-                height: 500,
-                rowNum: 300,
-                multiselect: true,
-                
-                onSelectRow: function(rowid, status, e) {
-                	var all = jQuery("#jqGrid").jqGrid('getGridParam', 'selarrrow');
-                	var sup = jQuery("#subGrid").jqGrid('getGridParam', 'selarrrow');
-                	if(all.length + sup.length == 7){
-                		alert('6명까지만 선택가능합니다.');
-                		$('#jqGrid').jqGrid('setSelection', rowid).prop('checkbox', false);
-                	}else if(all.length + sup.length > 7){
-                		alert('다시 선택해주세요.');
-                		$("#jqGrid").jqGrid("resetSelection");
-                		$("#subGrid").jqGrid("resetSelection");
-                	}
-                  },
-            });
-            
-            $("#subGrid").jqGrid({
-                url: '/supselect',
-                mtype: "GET",
-                datatype: "json",
-                colNames: ["닉네임", "레벨", "직업", "무릉"],
-                colModel: [
-                    { name: 'nickname', key: true, width: 150, sortable:false },
-                    { name: 'level', width: 75, align:"right", sortable:false },
-                    { name: 'job', width: 150, sortable:false },
-                    { name: 'spec', width: 300, sortable:false }
-                ],
-                viewrecords: true,
-                height: 500,
-                rowNum: 300,
-                multiselect: true,
-                onSelectRow: function(rowid, status, e) {
-                	var all = jQuery("#jqGrid").jqGrid('getGridParam', 'selarrrow');
-                	var sup = jQuery("#subGrid").jqGrid('getGridParam', 'selarrrow');
-                	console.log(all.length + sup.length);
-                	if(all.length + sup.length == 7){
-                		alert('6명까지만 선택가능합니다.');
-                		$('#subGrid').jqGrid('setSelection', rowid).prop('checkbox', false);
-                	}else if(all.length + sup.length > 7){
-                		alert('다시 선택해주세요.');
-                		$("#jqGrid").jqGrid("resetSelection");
-                		$("#subGrid").jqGrid("resetSelection");
-                	}
-                  },
-            });
-            
-            $("#m1").click(function(){
-            	var suro = $("#suro option:selected").val();
-				if(!confirm(suro + '에 저장하시겠습니까?')){
-            		return false;
-            	}
-            	var all = jQuery("#jqGrid").jqGrid('getGridParam', 'selarrrow');
-            	var sup = jQuery("#subGrid").jqGrid('getGridParam', 'selarrrow');
-            	
-            	var all_cnt = all.length;
-            	var sup_cnt = sup.length;
-            	var list = $.merge(all,sup);
-            	
-            	$("#"+suro).html(suro+ " : " + list);
+ $(document).ready(function(){
+	 $("#attGrid").DataTable({
+		 scrollY:500,
+	     ajax: {
+	      "type" : "GET",
+	         "url" : "/select",
+	            "dataType": "json",
+	            "dataSrc": function (d) {
+	                    return d;
+	            }
+	         },
+	    columns: [
+	               { data: "nickname" },
+	               { data: "level" },
+	               { data: "job" },
+	               { data: "spec" }
+	           ],
+	    columnDefs: [
+	        { "width": "150", "targets": 0 },
+	        { "width": "120", "targets": 1 },
+	        { "width": "150", "targets": 2 },
+	        { "width": "300", "targets": 3 }
+	      ],
+	    scrollY: "600px",
+	    scrollX: true,
+	    scrollCollapse: true,
+	    fixedColumns: true,
+ 		lengthChange: false,
+ 		searching: true,
+ 		ordering: false,
+ 		info: false,
+ 		paging: false,
+ 		select: {
+            style: 'multi'
+        }
+  });
+	 
+	 $("#subGrid").DataTable({
+		 scrollY:500,
+	     ajax: {
+	      "type" : "GET",
+	         "url" : "/supselect",
+	            "dataType": "json",
+	            "dataSrc": function (d) {
+	                    return d;
+	            }
+	         },
+	    columns: [
+	               { data: "nickname" },
+	               { data: "level" },
+	               { data: "job" },
+	               { data: "spec" }
+	           ],
+	    columnDefs: [
+	        { "width": "150", "targets": 0 },
+	        { "width": "120", "targets": 1 },
+	        { "width": "150", "targets": 2 },
+	        { "width": "300", "targets": 3 }
+	      ],
+	    scrollY: "600px",
+	    scrollX: true,
+	    scrollCollapse: true,
+	    fixedColumns: true,
+ 		lengthChange: false,
+ 		searching: true,
+ 		ordering: false,
+ 		info: false,
+ 		paging: false
+  });
+	
+	 var attTable = $('#attGrid').DataTable();
+	 var subTable = $('#subGrid').DataTable();
+	 
+	 
+	 $('#subGrid').on( 'click', 'tr', function () {
+		 console.log(attTable.rows('.selected').data().length + subTable.rows('.selected').data().length);
+		 if(attTable.rows('.selected').data().length + subTable.rows('.selected').data().length >= 6){
+			 alert('6명까지 선택할 수 있습니다.');
+			 return;
+		 }
+	     $(this).toggleClass('selected');
+	        
+	 });
+	 $('#attGrid').on( 'click', 'tr', function () {
+		 console.log(attTable.rows('.selected').data().length + subTable.rows('.selected').data().length);
+		 if(attTable.rows('.selected').data().length + subTable.rows('.selected').data().length >= 6){
+			 alert('6명까지 선택할 수 있습니다.');
+			 return;
+		 }
+	     $(this).toggleClass('selected');
+	 });
+	 
+	 $("#m1").click(function(){
+     	var suro = $("#suro option:selected").val();
+			if(!confirm(suro + '에 저장하시겠습니까?')){
+     		return ;
+     	}
+     	var all = attTable.rows('.selected').data().toArray();
+     	var sup = subTable.rows('.selected').data().toArray();
+     	
+     	var all_cnt = all.length;
+     	var sup_cnt = sup.length;
+     	var list = $.merge(all,sup);
+     	
+     	if(all_cnt + sup_cnt == 0){
+     		return;
+     	}
+     	
+     	var nick_select = [];
+     	for(var i = 0; i < list.length; i++){
+     		nick_select.push(list[i].nickname);
+     	}
+     	console.log(nick_select);
+     	
+     	$("#"+suro).html(suro+ " : " + nick_select);
+     	
+     	for(var i = 0; i< all.length; i++){
+     		attTable.row('.selected').remove().draw( false );	
+     	}
+     	
+     	for(var i = 0; i< sup.length; i++){
+     		subTable.row('.selected').remove().draw( false );	
+     	}
+     	
+     });
+	 
+	 $("#m2").click(function(){
+     	location.reload();
+     });
+ });
 
-            	for(var i=0; i<all_cnt; i ++) {
-            	    $('#jqGrid').jqGrid('delRowData', all[0])
-            	}
-            	for(var i=0; i<sup_cnt; i ++) {
-            	    $('#subGrid').jqGrid('delRowData', sup[0])
-            	}
-            	
-
-            	$("#jqGrid").jqGrid("resetSelection");
-        		$("#subGrid").jqGrid("resetSelection");
-            });
-            
-            $("#m2").click(function(){
-            	location.reload();
-            });
-            
-        });
 </script>
 </body>
 </html>
