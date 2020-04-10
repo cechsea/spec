@@ -9,29 +9,122 @@
 		<result property="job" column="job" />
 		<result property="floor" column="floor" />
 		<result property="time" column="time" />
+		<result property="guild_code" column="guild_code" />
+		<result property="import_time" column="import_time" />
 	</resultMap>
-
-    <select id="selectNow" resultType="String">
-        SELECT NOW()
+	
+	<resultMap type="com.guringnae.guildspec.GuildDTO" id="guild">
+		<result property="guild_code" column="guild_code" />
+		<result property="guild_name" column="guild_name" />
+		<result property="server" column="server" />
+		<result property="serverNm" column="serverNm" />
+	</resultMap>
+	
+	<select id="guildSelect" resultMap="guild">
+	<![CDATA[
+	SELECT
+	A.GUILD_CODE,
+	A.GUILD_NAME,
+	A.SERVER,
+	B.SERVER_NAME AS serverNm
+	FROM GUILD A LEFT JOIN SERVER B ON A.SERVER = B.SERVER_CODE	
+	]]>
+	</select>
+	
+	
+	<select id="getGuildCode" resultType="String">
+	<![CDATA[
+	SELECT
+	guild_code
+	FROM GUILD
+	WHERE 
+	GUILD_NAME = #{guild_name}
+	AND SERVER = #{server}
+	]]>
+	</select>
+	
+	<select id="lastUdt" resultType="String">
+    <![CDATA[
+        SELECT 
+		import_time
+		FROM SPEC
+		WHERE
+		GUILD_CODE = #{guild_code}
+		ORDER BY import_time DESC LIMIT 1
+    ]]>
+    </select>
+	
+	<insert id="attIns">
+	<![CDATA[
+	INSERT INTO ATTEND
+	(
+	NICKNAME
+	)VALUES(
+	#{nickname}
+	)
+	]]>
+	</insert>
+	
+	<delete id="attDel">
+	<![CDATA[
+	DELETE 
+	FROM ATTEND
+	WHERE
+	NICKNAME = #{nickname}
+	]]>
+	</delete>
+	
+	<select id="allList" resultMap="spec" >
+    <![CDATA[
+    SELECT
+    A.nickname,
+    A.level,
+    A.spec,
+    A.job,
+    A.floor,
+    A.time
+    FROM SPEC A 
+    WHERE
+     A.GUILD_CODE = #{guild_code}
+     AND NICKNAME NOT IN (SELECT NICKNAME FROM ATTEND)
+    ORDER BY floor desc, time asc, level desc
+    ]]>
+    </select>
+    
+    <select id="allLists" resultMap="spec" >
+    <![CDATA[
+    SELECT
+    A.nickname,
+    A.level,
+    A.spec,
+    A.job,
+    A.floor,
+    A.time
+    FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
+    WHERE
+     A.GUILD_CODE = #{guild_code}
+    ORDER BY floor desc, time asc, level desc
+    ]]>
     </select>
     
     <select id="attackList" resultMap="spec"  parameterType="java.util.Map">
     <![CDATA[
     SELECT
-    nickname,
-    level,
-    spec,
-    job,
-    floor,
-    time
-    FROM SPEC
+    A.nickname,
+    A.level,
+    A.spec,
+    A.job,
+    A.floor,
+    A.time
+    FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
     WHERE
-    	job not in
+    	A.job not in
     ]]>
     	<foreach collection="code_list" item="item" index="index" separator="," open="(" close=")">
  			'${item}'
         </foreach>
     <![CDATA[
+    AND A.GUILD_CODE = #{guild_code}
     ORDER BY floor desc, time asc, level desc
     ]]>
     </select>
@@ -39,22 +132,59 @@
     <select id="supList" resultMap="spec" parameterType="java.util.Map">
     <![CDATA[
     SELECT
-    nickname,
-    level,
-    spec,
-    job,
-    floor,
-    time
-    FROM SPEC
+    A.nickname,
+    A.level,
+    A.spec,
+    A.job,
+    A.floor,
+    A.time
+    FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
     WHERE
-    	job in
+    	A.job in
     	]]>
     	<foreach collection="code_list" item="item" index="index" separator="," open="(" close=")">
  			'${item}'
         </foreach>
     <![CDATA[
+    AND A.GUILD_CODE = #{guild_code}
     ORDER BY floor desc, time asc, level desc
     ]]>
     </select>
+    
+    <delete id="specDelete">
+    <![CDATA[ 
+    DELETE FROM SPEC
+    WHERE
+    guild_code = #{guild_code}
+    ]]>
+    </delete>
+    
+    <insert id="specInsert">
+    <![CDATA[
+    INSERT INTO SPEC
+    (
+    nickname,
+    level,
+    spec,
+    job,
+    floor,
+    time,
+    import_time,
+    guild_code
+    )VALUES(
+    #{nickname},
+    #{level},
+    #{spec},
+    #{job},
+    #{floor},
+    #{time},
+    now(),
+    #{guild_code}
+    )
+    ]]>
+    </insert>
+    
+    
+    
     
 </mapper>
