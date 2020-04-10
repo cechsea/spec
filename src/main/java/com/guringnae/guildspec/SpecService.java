@@ -89,4 +89,17 @@ public class SpecService {
 		return mapper.supList(param);
 	}
 	
+	public List<SuroDTO> suroSelect(String guild_name, String server, String suro){
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("suro", suro);
+		param.put("guild_code", getGuildCode(guild_name, server));
+		return mapper.suroSelect(param);
+	}
+	
+	public void suroInsert(List<SuroDTO> list) {
+		for(SuroDTO dto : list) {
+			mapper.suroInsert(dto);
+		}
+	}
+	
 }

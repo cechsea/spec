@@ -118,7 +118,7 @@
 		<h2>전체</h2>
 	</td>
 	<td align="right">
-	<input type="button" onclick="javascript:void(0)" id="allAdd" value="전체저장" >
+	<input type="button" onclick="javascript:void(0)" id="allAdd" value="전체추가" >
 	<input type="button" onclick="javascript:void(0)" id="allDel" value="전체삭제" >
 	<input type="button" onclick="javascript:void(0)" id="add" value="추가" >
 	</td>

@@ -112,11 +112,16 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/admin/{server}/{guild_name}", method = RequestMethod.GET)
-	public ModelAndView guildAdmin(@PathVariable String guild_name, @PathVariable String server) throws ParseException {
+	public ModelAndView guildAdmin(@PathVariable String guild_name, @PathVariable String server) throws Exception {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("guildName",guild_name);
 		mav.addObject("server",server);
 		mav.setViewName("home2");
 		return mav;
+	}
+	
+	@RequestMapping(value="/admin/suroins", method = RequestMethod.POST)
+	public void suroInsert(@RequestBody SuroDTO dto) throws ParseException {
+		service.suroInsert(dto.getList());
 	}
 }

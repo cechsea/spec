@@ -19,6 +19,7 @@ public interface SpecMapper {
 	void specDelete(String guild_code); 
 	void specInsert(SpecDTO dto);
 	List<GuildDTO> guildSelect();
-	 
+	void suroInsert(SuroDTO dto);
+	List<SuroDTO> suroSelect(Map<String, Object> param);
 	 
 }

@@ -8,10 +8,12 @@
     <link rel="stylesheet" href="/resources/css/jquery-ui.css"/> 
     <link rel="stylesheet" href="/resources/css/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="/resources/css/dataTables.bootstrap.min.css"/>
+    <link rel="stylesheet" href="/resources/css/jquery.modal.min.css"/>
     
     <script src="/resources/js/jquery-3.4.1.min.js" type="text/javascript"></script>
     <script src="/resources/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="/resources/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
+    <script src="/resources/js/jquery.modal.min.js" type="text/javascript"></script>
     
     <meta charset="utf-8" />
 	<title>수로 파티 도우미(${guildName} 관리자 페이지)</title>
@@ -21,6 +23,8 @@
 <h3>길드를 검색후 더블클릭하면 이동됩니다.</h3>
 <input type="button" onclick="javascript:void(0)" id="specUdt" value="업데이트" >
 <input type="button" onclick="javascript:void(0)" id="home" value="메인으로" >
+<input type="button" onclick="javascript:void(0)" id="openmodal" value="서포터 직업 선택" >
+<p><a id="modalbtn" href="#ex1" rel="modal:open"></a></p>
 
 <table>
 	<tr>
@@ -202,6 +206,19 @@
 	</tr>
 	</table>
 	
+	<!-- modal -->
+	<div id="ex1" class="modal">
+	  <p>서포터 직업군 선택</p>
+	  <p>체크 후 저장 클릭하시면 저장됩니다.</p>
+	  
+	  
+	  
+	  <input type="button" onclick="javascript:void(0)" id="supsave" value="저장" >
+	  <input type="button" onclick="javascript:void(0)" id="exit" value="나가기" >
+	  <a id="modalexit" href="#" rel="modal:close"></a>
+	</div>
+	
+	
  <script type="text/javascript"> 
  $(document).ready(function(){
 	 $("#allGrid").DataTable({
@@ -291,7 +308,14 @@
 			location.href="/${server}/${guildName}";	 
 		 });
 	 
-	 
+		 $("#openmodal").click(function(){
+		 	$("#modalbtn").get(0).click();
+		 });
+		 
+		 $("#exit").click(function(){
+			$("#modalexit").get(0).click();
+		 });
+		 
  });
  
  

@@ -20,6 +20,12 @@
 		<result property="serverNm" column="serverNm" />
 	</resultMap>
 	
+	<resultMap type="com.guringnae.guildspec.SuroDTO" id="suro">
+		<result property="nickname" column="nickname" />
+		<result property="guild_code" column="guild_code" />
+		<result property="suro" column="suro" />
+	</resultMap>
+	
 	<select id="guildSelect" resultMap="guild">
 	<![CDATA[
 	SELECT
@@ -115,7 +121,8 @@
     A.spec,
     A.job,
     A.floor,
-    A.time
+    A.time,
+    A.guild_code
     FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
     WHERE
     	A.job not in
@@ -137,7 +144,8 @@
     A.spec,
     A.job,
     A.floor,
-    A.time
+    A.time,
+    A.guild_code
     FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
     WHERE
     	A.job in
@@ -184,7 +192,30 @@
     ]]>
     </insert>
     
-    
-    
+    <insert id="suroInsert">
+    <![CDATA[
+    INSERT INTO SURO
+    (
+    NICKNAME,
+    GUILD_CODE,
+    SURO
+    )VALUES(
+    #{nickname},
+    #{guild_code},
+    #{suro}
+    )
+    ]]>
+    </insert>
+        
+    <select id="suroSelect" resultMap="suro">
+    SELECT
+    NICKNAME,
+    GUILD_CODE,
+    SURO
+    FROM SURO
+    WHERE
+    GUILD_CODE = #{GUILD_CODE}
+    AND SURO = #{SURO}
+    </select>
     
 </mapper>

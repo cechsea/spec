@@ -28,18 +28,19 @@
 
 <table>
 	<tr>
-	<td >
-		<h2>전체</h2>
+<td style="vertical-align:top">
+	<table>
+	<tr>
+	<td>
+		<h2>딜러</h2>
 	</td>
 	<td align="right">
-	<input type="button" onclick="javascript:void(0)" id="allAdd" value="전체저장" >
-	<input type="button" onclick="javascript:void(0)" id="allDel" value="전체삭제" >
-	<input type="button" onclick="javascript:void(0)" id="add" value="추가" >
+	&nbsp;
 	</td>
 	</tr>
 	<tr>
 	<td colspan="2"  style="padding: 0 20 0 0px;">
-	<table id="allGrid"  class="table table-striped table-bordered" >
+	<table id="attGrid"  class="table table-striped table-bordered" >
 	<thead>
 		<tr>
 			<th>닉네임</th>
@@ -52,8 +53,53 @@
 	</td>
 	</tr>
 	</table>
-	<table>
+</td>
+<td valign="top">
+<table>
 	<tr>
+	<td>
+		<h2>서포터</h2>
+	</td>
+	<td align="right">
+	<select id="suro">
+	    <option value="1-1">1-1</option>
+	    <option value="1-2">1-2</option>
+	    <option value="1-3">1-3</option>
+	    <option value="2-1">2-1</option>
+	    <option value="2-2">2-2</option>
+	    <option value="2-3">2-3</option>
+	    <option value="3-1">3-1</option>
+	    <option value="3-2">3-2</option>
+	    <option value="3-3">3-3</option>
+	    <option value="4-2">4-1</option>
+	    <option value="4-2">4-2</option>
+	    <option value="4-3">4-3</option>
+	</select>
+	
+	<input type="button" onclick="javascript:void(0)" id="admin_suro_save" value="저장" >
+	<input type="button" onclick="javascript:void(0)" id="delete" value="삭제" >
+	</td>
+	</tr>
+	<tr>
+	<td colspan="2">
+	<table id="subGrid"  class="table table-striped table-bordered" >
+	<thead>
+		<tr>
+			<th>닉네임</th>
+			<th>레벨</th>
+			<th>직업</th>
+			<th>무릉</th>
+		</tr>
+	</thead>
+	</table>
+	</td>
+	</tr>
+</table>
+</td>
+</tr>
+</table>
+<table>
+<tr>
 	<td>
 		<h3>1수로</h3>
 	</td>
@@ -221,11 +267,45 @@
 	
  <script type="text/javascript"> 
  $(document).ready(function(){
-	 $("#allGrid").DataTable({
+	 $("#attGrid").DataTable({
 		 scrollY:500,
 	     ajax: {
 	      "type" : "GET",
-	         "url" : "/allselect/${server}/${guildName}",
+	         "url" : "/select/${server}/${guildName}",
+	            "dataType": "json",
+	            "dataSrc": function (d) {
+	                    return d;
+	            }
+	         },
+	    columns: [
+	               { data: "nickname" },
+	               { data: "level" },
+	               { data: "job" },
+	               { data: "spec" }
+	           ],
+	    columnDefs: [
+	        { "width": "150", "targets": 0 },
+	        { "width": "120", "targets": 1 },
+	        { "width": "150", "targets": 2 },
+	        { "width": "300", "targets": 3 }
+	      ],
+	    scrollY: "600px",
+	    scrollX: true,
+	    scrollCollapse: true,
+	    fixedColumns: true,
+ 		lengthChange: false,
+ 		searching: true,
+ 		ordering: false,
+ 		info: false,
+ 		paging: false,
+        bDestroy: true
+  });
+	 
+	 $("#subGrid").DataTable({
+		 scrollY:500,
+	     ajax: {
+	      "type" : "GET",
+	         "url" : "/supselect/${server}/${guildName}",
 	            "dataType": "json",
 	            "dataSrc": function (d) {
 	                    return d;
@@ -286,10 +366,16 @@
 		 		paging: false,
 		        bDestroy: true
 		  });;
+		  
+		  $('#suro' + i + "_" + j).on( 'click', 'tr', function () {
+			     $(this).toggleClass('selected');
+			        
+			 });
 		 }
 	 }
 	
-	 var allTable = $('#allGrid').DataTable();
+	 var attTable = $('#attGrid').DataTable();
+	 var subTable = $('#subGrid').DataTable();
 	 
 	 $("#specUdt").click(function(){
 		 
@@ -315,6 +401,44 @@
 		 $("#exit").click(function(){
 			$("#modalexit").get(0).click();
 		 });
+		 
+		 $('#subGrid').on( 'click', 'tr', function () {
+		     $(this).toggleClass('selected');
+		        
+		 });
+		 $('#attGrid').on( 'click', 'tr', function () {
+		     $(this).toggleClass('selected');
+		 });
+		 
+		 $('#admin_suro_save').click(function () {
+			 var suro = $("#suro option:selected").val();
+			 var all = attTable.rows('.selected').data().toArray();
+		     var sup = subTable.rows('.selected').data().toArray();
+		     var list = $.merge(all,sup);
+		     
+		     var nick_select = [];
+		     for(var i = 0; i < list.length; i++){
+		     	nick_select.push({ nickname : list[i].nickname, guild_code : list[i].guild_code, suro : suro});
+		     }
+		     
+		     var datas = {
+			 	"list" : nick_select
+			 };
+			 
+			 jQuery.ajaxSettings.traditional = true;
+			 
+			 $.ajax({
+		         url         :   "/admin/suroins",
+		         dataType    :   "json",
+		         contentType : "application/json; charset=UTF-8",
+		         type        :   "post",
+		         data        :   JSON.stringify(datas),
+		         complete     :   function(){
+		             location.reload();
+		         }
+		     });
+		 });
+		 
 		 
  });
  
