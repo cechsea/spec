@@ -41,6 +41,13 @@ public class HomeController {
 		mav.addObject("server", server);
 		mav.addObject("guildName", guild_name);
 		mav.addObject("udtTime",service.lastUdt(guild_name, server));
+		List<SupDTO> list = service.guildsup(guild_name, server);
+		String cho = "";
+		for(SupDTO dto : list) {
+			cho += dto.getJob() + ", ";
+		}
+		if(cho.equals("")) cho = ", ";
+		mav.addObject("choicesup", cho.substring(0, cho.length()-2));
 		mav.setViewName("home8");
 		return mav;
 	}
@@ -73,6 +80,18 @@ public class HomeController {
 	@ResponseBody
 	public List<SpecDTO> supportSelect(@PathVariable String guild_name, @PathVariable String server){
 		return service.supList(guild_name, server);
+	}
+	
+	@RequestMapping(value = "/selectall/{server}/{guild_name}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SpecDTO> select_all(@PathVariable String guild_name, @PathVariable String server){
+		return service.attackList_all(guild_name, server);
+	}
+	
+	@RequestMapping(value = "/supselectall/{server}/{guild_name}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SpecDTO> supportSelect_all(@PathVariable String guild_name, @PathVariable String server){
+		return service.supList_all(guild_name, server);
 	}
 	
 
@@ -116,12 +135,68 @@ public class HomeController {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("guildName",guild_name);
 		mav.addObject("server",server);
+		List<SupDTO> list = service.guildsup(guild_name, server);
+		String cho = "";
+		for(SupDTO dto : list) {
+			cho += dto.getJob() + ", ";
+		}
+		if(cho.equals("")) cho = ", ";
+		mav.addObject("choicesup", cho.substring(0, cho.length()-2));
 		mav.setViewName("home2");
 		return mav;
 	}
 	
 	@RequestMapping(value="/admin/suroins", method = RequestMethod.POST)
-	public void suroInsert(@RequestBody SuroDTO dto) throws ParseException {
+	public void suroInsert(@RequestBody SuroDTO dto) throws Exception {
 		service.suroInsert(dto.getList());
+	}
+	
+	@RequestMapping(value = "/suroselect/{server}/{guild_name}/{suro}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SuroDTO> suroSelect(@PathVariable String guild_name, @PathVariable String server, @PathVariable String suro){
+		return service.suroSelect(guild_name, server, suro);
+	}
+	
+	@RequestMapping(value="/admin/surodel", method = RequestMethod.POST)
+	public void suroDelete(@RequestBody SuroDTO dto) throws Exception {
+		service.suroDelete(dto.getList());
+	}
+	
+	@RequestMapping(value = "/suplist/{server}/{guild_name}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<JobDTO> supList(@PathVariable String guild_name, @PathVariable String server){
+		return service.supchoicelist(guild_name, server);
+	}
+	
+	@RequestMapping(value="/admin/supins", method = RequestMethod.POST)
+	public void supInsert(@RequestBody SupDTO dto) throws Exception {
+		service.supchoins(dto.getList());
+	}
+	
+	@RequestMapping(value = "/guildsuplist/{server}/{guild_name}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SupDTO> guildSupList(@PathVariable String guild_name, @PathVariable String server){
+		return service.guildsup(guild_name, server);
+	}
+	
+	@RequestMapping(value="/admin/supdel", method = RequestMethod.POST)
+	public void supDelete(@RequestBody SupDTO dto) throws Exception {
+		service.supchodel(dto.getList());
+	}
+	
+	@RequestMapping(value="/supselectpage/{server}/{guild_name}", method = RequestMethod.GET)
+	public ModelAndView guildSupAdmin(@PathVariable String guild_name, @PathVariable String server) throws Exception {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("guildName",guild_name);
+		mav.addObject("server",server);
+		List<SupDTO> list = service.guildsup(guild_name, server);
+		String cho = "";
+		for(SupDTO dto : list) {
+			cho += dto.getJob() + ", ";
+		}
+		if(cho.equals("")) cho = ", ";
+		mav.addObject("choicesup", cho.substring(0, cho.length()-2));
+		mav.setViewName("home3");
+		return mav;
 	}
 }

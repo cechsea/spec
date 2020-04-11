@@ -20,6 +20,22 @@
 		<result property="serverNm" column="serverNm" />
 	</resultMap>
 	
+	<resultMap type="com.guringnae.guildspec.SuroDTO" id="suro">
+		<result property="nickname" column="nickname" />
+		<result property="guild_code" column="guild_code" />
+		<result property="suro" column="suro" />
+		<result property="job" column="job" />
+	</resultMap>
+	
+	<resultMap type="com.guringnae.guildspec.JobDTO" id="supcho">
+		<result property="job" column="job" />
+	</resultMap>
+	
+	<resultMap type="com.guringnae.guildspec.SupDTO" id="sup">
+		<result property="job" column="job" />
+		<result property="guild_code" column="guild_code" />
+	</resultMap>
+	
 	<select id="guildSelect" resultMap="guild">
 	<![CDATA[
 	SELECT
@@ -115,16 +131,21 @@
     A.spec,
     A.job,
     A.floor,
-    A.time
-    FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
+    A.time,
+    A.guild_code
+    FROM SPEC A 
     WHERE
-    	A.job not in
+    	1 = 1
     ]]>
+    <if test="listsize != 0">
+    <![CDATA[AND A.job not in]]>
     	<foreach collection="code_list" item="item" index="index" separator="," open="(" close=")">
  			'${item}'
         </foreach>
+   	</if>
     <![CDATA[
     AND A.GUILD_CODE = #{guild_code}
+    AND A.NICKNAME NOT IN (SELECT NICKNAME FROM SURO WHERE GUILD_CODE = #{guild_code})
     ORDER BY floor desc, time asc, level desc
     ]]>
     </select>
@@ -137,16 +158,24 @@
     A.spec,
     A.job,
     A.floor,
-    A.time
-    FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
+    A.time,
+    A.guild_code
+    FROM SPEC A 
     WHERE
-    	A.job in
+    1 = 1
     	]]>
+    	<if test="listsize != 0">
+    	<![CDATA[AND	A.job in]]>
     	<foreach collection="code_list" item="item" index="index" separator="," open="(" close=")">
- 			'${item}'
+ 		 '${item}'
         </foreach>
+        </if>
+        <if test="listsize == 0">
+    	<![CDATA[AND	A.job in ('없다')]]>
+        </if>
     <![CDATA[
     AND A.GUILD_CODE = #{guild_code}
+    AND A.NICKNAME NOT IN (SELECT NICKNAME FROM SURO WHERE GUILD_CODE = #{guild_code})
     ORDER BY floor desc, time asc, level desc
     ]]>
     </select>
@@ -184,7 +213,139 @@
     ]]>
     </insert>
     
+    <insert id="suroInsert">
+    <![CDATA[
+    INSERT INTO SURO
+    (
+    NICKNAME,
+    GUILD_CODE,
+    SURO
+    )VALUES(
+    #{nickname},
+    #{guild_code},
+    #{suro}
+    )
+    ]]>
+    </insert>
+        
+    <select id="suroSelect" resultMap="suro">
+    <![CDATA[
+    SELECT
+    A.NICKNAME,
+    A.GUILD_CODE,
+    A.SURO,
+    B.JOB
+    FROM SURO A LEFT JOIN SPEC B ON A.NICKNAME = B.NICKNAME
+    WHERE
+    A.GUILD_CODE = #{guild_code}
+    AND A.SURO = #{suro}
+    ]]>
+    </select>
     
+    <delete id="suroDelete">
+    <![CDATA[
+    DELETE FROM SURO
+    WHERE
+    NICKNAME = #{nickname}
+    ]]>
+    </delete>
     
+    <select id="supcho" resultMap="supcho">
+    <![CDATA[
+    SELECT
+    JOB
+    FROM JOB
+    WHERE
+    JOB NOT IN (SELECT JOB FROM SUP WHERE GUILD_CODE = #{guild_code})
+    ]]>
+    </select>
+    
+    <insert id="supchoins">
+    <![CDATA[
+    INSERT INTO SUP
+    (
+    JOB,
+    GUILD_CODE
+    )VALUES(
+    #{job},
+    #{guild_code}
+    )
+    ]]>
+    </insert>
+    
+    <select id="guildsup" resultMap="sup">
+    <![CDATA[
+    SELECT
+    JOB,
+    GUILD_CODE
+    FROM SUP
+    WHERE
+    GUILD_CODE = #{guild_code}
+    ]]>
+    </select>
+    
+    <delete id="supchodel">
+    <![CDATA[
+    DELETE FROM SUP
+    WHERE
+    GUILD_CODE = #{guild_code}
+    AND JOB = #{job}
+    ]]>
+    </delete>
+    
+    <select id="attackList_all" resultMap="spec"  parameterType="java.util.Map">
+    <![CDATA[
+    SELECT
+    A.nickname,
+    A.level,
+    A.spec,
+    A.job,
+    A.floor,
+    A.time,
+    A.guild_code
+    FROM SPEC A 
+    WHERE
+    	1 = 1
+    ]]>
+    <if test="listsize != 0">
+    <![CDATA[AND A.job not in]]>
+    	<foreach collection="code_list" item="item" index="index" separator="," open="(" close=")">
+ 			'${item}'
+        </foreach>
+   	</if>
+    <![CDATA[
+    AND A.GUILD_CODE = #{guild_code}
+    ORDER BY floor desc, time asc, level desc
+    ]]>
+    </select>
+    
+    <select id="supList_all" resultMap="spec" parameterType="java.util.Map">
+    <![CDATA[
+    SELECT
+    A.nickname,
+    A.level,
+    A.spec,
+    A.job,
+    A.floor,
+    A.time,
+    A.guild_code
+    FROM SPEC A 
+    WHERE
+    1 = 1
+    	]]>
+    	<if test="listsize != 0">
+    	<![CDATA[AND	A.job in]]>
+    	<foreach collection="code_list" item="item" index="index" separator="," open="(" close=")">
+ 		 '${item}'
+        </foreach>
+        </if>
+        <if test="listsize == 0">
+    	<![CDATA[AND	A.job in ('없다')]]>
+        </if>
+    <![CDATA[
+    AND A.GUILD_CODE = #{guild_code}
+    ORDER BY floor desc, time asc, level desc
+    ]]>
+    </select>
     
 </mapper>

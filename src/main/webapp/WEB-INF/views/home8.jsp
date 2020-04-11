@@ -19,6 +19,7 @@
 <body>
 <h3>데이터 출처 : maple.gg</h3>
 <h3>최근 저장 : ${udtTime}</h3>
+<h3>선택한 서포터 직업 : ${choicesup}</h3>
 <input type="button" onclick="javascript:void(0)" id="specUdt" value="업데이트" >
 <input type="button" onclick="javascript:void(0)" id="admin" value="관리자페이지(개발중...)" >
 
@@ -112,7 +113,7 @@
 </tr>
 <tr>
 <td style="vertical-align:top">
-	<table>
+	<!-- <table>
 	<tr>
 	<td >
 		<h2>전체</h2>
@@ -137,7 +138,7 @@
 	</table>
 	</td>
 	</tr>
-	</table>
+	</table> -->
 </td>
 </tr>
 </table>
@@ -182,7 +183,7 @@
 		 scrollY:500,
 	     ajax: {
 	      "type" : "GET",
-	         "url" : "/select/${server}/${guildName}",
+	         "url" : "/selectall/${server}/${guildName}",
 	            "dataType": "json",
 	            "dataSrc": function (d) {
 	                    return d;
@@ -216,7 +217,7 @@
 		 scrollY:500,
 	     ajax: {
 	      "type" : "GET",
-	         "url" : "/supselect/${server}/${guildName}",
+	         "url" : "/supselectall/${server}/${guildName}",
 	            "dataType": "json",
 	            "dataSrc": function (d) {
 	                    return d;

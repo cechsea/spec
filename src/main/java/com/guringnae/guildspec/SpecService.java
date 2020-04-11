@@ -61,14 +61,13 @@ public class SpecService {
 	
 	public List<SpecDTO> attackList(String guild_name, String server){
 		Map<String, Object> param = new HashMap<String, Object>();
+		List<SupDTO> list = mapper.guildsup(getGuildCode(guild_name, server));
 		List<String> inList = new ArrayList<String>();
 		
-		inList.add("비숍");
-		inList.add("제로");
-		inList.add("배틀메이지");
-		inList.add("은월");
-		inList.add("플레임위자드");
-		
+		for(SupDTO dto : list) {
+			inList.add(dto.getJob());
+		}
+		param.put("listsize", inList.size());
 		param.put("code_list", inList);
 		param.put("guild_code", getGuildCode(guild_name, server));
 		return mapper.attackList(param);
@@ -76,14 +75,13 @@ public class SpecService {
 	
 	public List<SpecDTO> supList(String guild_name, String server){
 		Map<String, Object> param = new HashMap<String, Object>();
+		List<SupDTO> list = mapper.guildsup(getGuildCode(guild_name, server));
 		List<String> inList = new ArrayList<String>();
 		
-		inList.add("비숍");
-		inList.add("제로");
-		inList.add("배틀메이지");
-		inList.add("은월");
-		inList.add("플레임위자드");
-		
+		for(SupDTO dto : list) {
+			inList.add(dto.getJob());
+		}
+		param.put("listsize", inList.size());
 		param.put("code_list", inList);
 		param.put("guild_code", getGuildCode(guild_name, server));
 		return mapper.supList(param);
@@ -102,4 +100,59 @@ public class SpecService {
 		}
 	}
 	
+	public void suroDelete(List<SuroDTO> list) {
+		for(SuroDTO dto : list) {
+			mapper.suroDelete(dto.getNickname());
+		}
+	}
+	
+	public List<JobDTO> supchoicelist(String guild_name, String server){
+		return mapper.supcho(getGuildCode(guild_name, server));
+	}
+	
+	public void supchoins(List<SupDTO> list) {
+		for(SupDTO dto : list) {
+			dto.setGuild_code(getGuildCode(dto.getGuild_name(), dto.getServer()));
+			mapper.supchoins(dto);
+		}
+	}
+	
+	public List<SupDTO> guildsup(String guild_name, String server){
+		return mapper.guildsup(getGuildCode(guild_name, server));
+	}
+	
+	public void supchodel(List<SupDTO> list) {
+		for(SupDTO dto : list) {
+			dto.setGuild_code(getGuildCode(dto.getGuild_name(), dto.getServer()));
+			mapper.supchodel(dto);
+		}
+	}
+	
+	public List<SpecDTO> attackList_all(String guild_name, String server){
+		Map<String, Object> param = new HashMap<String, Object>();
+		List<SupDTO> list = mapper.guildsup(getGuildCode(guild_name, server));
+		List<String> inList = new ArrayList<String>();
+		
+		for(SupDTO dto : list) {
+			inList.add(dto.getJob());
+		}
+		param.put("listsize", inList.size());
+		param.put("code_list", inList);
+		param.put("guild_code", getGuildCode(guild_name, server));
+		return mapper.attackList_all(param);
+	}
+	
+	public List<SpecDTO> supList_all(String guild_name, String server){
+		Map<String, Object> param = new HashMap<String, Object>();
+		List<SupDTO> list = mapper.guildsup(getGuildCode(guild_name, server));
+		List<String> inList = new ArrayList<String>();
+		
+		for(SupDTO dto : list) {
+			inList.add(dto.getJob());
+		}
+		param.put("listsize", inList.size());
+		param.put("code_list", inList);
+		param.put("guild_code", getGuildCode(guild_name, server));
+		return mapper.supList_all(param);
+	}
 }

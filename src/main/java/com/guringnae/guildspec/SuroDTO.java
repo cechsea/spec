@@ -12,6 +12,14 @@ public class SuroDTO {
 	private String guild_code;
 	@JsonProperty(value="suro")
 	private String suro;
+	@JsonProperty(value="job")
+	private String job;
+	public String getJob() {
+		return job;
+	}
+	public void setJob(String job) {
+		this.job = job;
+	}
 	public String getNickname() {
 		return nickname;
 	}

@@ -21,5 +21,11 @@ public interface SpecMapper {
 	List<GuildDTO> guildSelect();
 	void suroInsert(SuroDTO dto);
 	List<SuroDTO> suroSelect(Map<String, Object> param);
-	 
+	void suroDelete(String nickname);
+	List<JobDTO> supcho(String guild_code);
+	void supchoins(SupDTO dto);
+	List<SupDTO> guildsup(String guild_code);
+	void supchodel(SupDTO dto);
+	List<SpecDTO> attackList_all(Map<String, Object> param);
+	List<SpecDTO> supList_all(Map<String, Object> param);
 }
