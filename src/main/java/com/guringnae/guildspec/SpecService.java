@@ -45,6 +45,10 @@ public class SpecService {
 		return mapper.allList(getGuildCode(guild_name, server));
 	}
 	
+	public List<SpecDTO> attList(String guild_name, String server){
+		return mapper.attList(getGuildCode(guild_name, server));
+	}
+	
 	public void allSave(String guild_name, String server) {
 		List<SpecDTO> list = mapper.allList(getGuildCode(guild_name, server));
 		for(SpecDTO dto : list) {

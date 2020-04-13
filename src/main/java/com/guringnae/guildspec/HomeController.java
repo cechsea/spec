@@ -58,6 +58,12 @@ public class HomeController {
 			return service.allList(guild_name, server);
 	}
 	
+	@RequestMapping(value = "/attselect/{server}/{guild_name}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SpecDTO> attSelect(@PathVariable String guild_name, @PathVariable String server){
+			return service.attList(guild_name, server);
+	}
+	
 	@RequestMapping(value="/alldel", method = RequestMethod.POST)
 	@ResponseBody
 	public void allAttDel(@RequestBody SpecDTO list) {
@@ -197,6 +203,15 @@ public class HomeController {
 		if(cho.equals("")) cho = ", ";
 		mav.addObject("choicesup", cho.substring(0, cho.length()-2));
 		mav.setViewName("home3");
+		return mav;
+	}
+	
+	@RequestMapping(value="/attselectpage/{server}/{guild_name}", method = RequestMethod.GET)
+	public ModelAndView attSelectPage(@PathVariable String guild_name, @PathVariable String server) throws Exception {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("guildName",guild_name);
+		mav.addObject("server",server);
+		mav.setViewName("home4");
 		return mav;
 	}
 }

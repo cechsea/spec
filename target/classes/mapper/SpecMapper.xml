@@ -107,6 +107,22 @@
     ]]>
     </select>
     
+    <select id="attList" resultMap="spec">
+    <![CDATA[
+    SELECT
+    A.nickname,
+    B.level,
+    B.spec,
+    B.job,
+    B.floor,
+    B.time
+    FROM ATTEND A LEFT JOIN SPEC B ON A.NICKNAME = B.NICKNAME
+    WHERE
+     B.GUILD_CODE = #{guild_code}
+    ORDER BY floor desc, time asc, level desc
+    ]]>
+    </select>
+    
     <select id="allLists" resultMap="spec" >
     <![CDATA[
     SELECT
@@ -133,7 +149,7 @@
     A.floor,
     A.time,
     A.guild_code
-    FROM SPEC A 
+    FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
     WHERE
     	1 = 1
     ]]>
@@ -160,7 +176,7 @@
     A.floor,
     A.time,
     A.guild_code
-    FROM SPEC A 
+    FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
     WHERE
     1 = 1
     	]]>

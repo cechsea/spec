@@ -13,6 +13,7 @@ public interface SpecMapper {
 	String getGuildCode(Map<String, Object> param);
 	String lastUdt(String guild_code);
 	List<SpecDTO> allList(String guild_code); 
+	List<SpecDTO> attList(String guild_code);
 	List<SpecDTO> allLists(String guild_code);
 	List<SpecDTO> attackList(Map<String, Object> param);
 	List<SpecDTO> supList(Map<String, Object> param);

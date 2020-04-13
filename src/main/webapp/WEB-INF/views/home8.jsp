@@ -265,48 +265,6 @@
 	     $(this).toggleClass('selected');
 	 });
 	 
-	 $("#allAdd").click(function(){
-		 if(!confirm("모든 길드원이 수료에 참여하나요?"))
-			 return;
-		 
-		 var datas = {
-		     		"guildName" : '${guildName}',
-		     		"server"		: '${server}'
-		 };
-		 
-	     	$.ajax({
-             url         :   "/allsave",
-             dataType    :   "json",
-             contentType : "application/json; charset=UTF-8",
-             type        :   "post",
-             data		  :		JSON.stringify(datas),
-             complete     :   function(){
-                location.reload();
-             }
-         });
-	 });
-	 
-	 $("#allDel").click(function(){
-		 if(!confirm("전체 삭제 하시겠습니까?"))
-			 return;
-		 
-			 var datas = {
-			     		"guildName" : '${guildName}',
-			     		"server"		: '${server}'
-			 };	
-		 
-	     	$.ajax({
-             url         :   "/alldel",
-             dataType    :   "json",
-             contentType : "application/json; charset=UTF-8",
-             type        :   "post",
-             data		  :		JSON.stringify(datas),
-             complete     :   function(){
-                 location.reload();
-             }
-         });
-	 });
-	 
 	 $("#m1").click(function(){
      	var suro = $("#suro option:selected").val();
 			if(!confirm(suro + '에 저장하시겠습니까?')){
@@ -350,73 +308,6 @@
 			 return;
      	location.reload();
      });
-	 
-	 $("#add").click(function(){
-		 var all = allTable.rows('.selected').data().toArray();
-		 
-		 if(all.length <= 0){
-			 alert("선택된 유저가 없습니다.");
-			 return;
-		 }
-		 
-		 var nick_select = [];
-	     	for(var i = 0; i < all.length; i++){
-	     		nick_select.push(all[i]);
-	     	}
-	     	
-	     	var datas = {
-	     		"list" : nick_select
-	     	};
-	     	
-	     	jQuery.ajaxSettings.traditional = true;
-	     	
-	     	$.ajax({
-                url         :   "/save",
-                dataType    :   "json",
-                contentType : "application/json; charset=UTF-8",
-                type        :   "post",
-                data        :   JSON.stringify(datas),
-                complete     :   function(){
-                    location.reload();
-                }
-            });
-	 });
-	 
-	 $("#delete").click(function(){
-		 var all = attTable.rows('.selected').data().toArray();
-	     	var sup = subTable.rows('.selected').data().toArray();
-	     	
-	     	var all_cnt = all.length;
-	     	var sup_cnt = sup.length;
-	     	var list = $.merge(all,sup);
-	     	
-	     	if(all_cnt + sup_cnt == 0){
-	     		alert("선택된 유저가 없습니다.");
-	     		return;
-	     	}
-	     	
-	     	var nick_select = [];
-	     	for(var i = 0; i < list.length; i++){
-	     		nick_select.push(list[i]);
-	     	}
-	     	
-	     	var datas = {
-	     		"list" : nick_select
-	     	};
-	     	
-	     	jQuery.ajaxSettings.traditional = true;
-	     	
-	     	$.ajax({
-                url         :   "/delete",
-                dataType    :   "json",
-                contentType : "application/json; charset=UTF-8",
-                type        :   "post",
-                data        :   JSON.stringify(datas),
-                complete     :   function(){
-                    location.reload();
-                }
-            });
-	 });
 	 
 
 	 $("#specUdt").click(function(){

@@ -24,6 +24,7 @@
 <input type="button" onclick="javascript:void(0)" id="specUdt" value="업데이트" >
 <input type="button" onclick="javascript:void(0)" id="home" value="메인으로" >
 <input type="button" onclick="javascript:void(0)" id="opensup" value="서포터 직업 선택" >
+<input type="button" onclick="javascript:void(0)" id="openatt" value="수로 참여자 선택" >
 
 <table>
 	<tr>
@@ -403,8 +404,12 @@
 		 });
 		 
 		 $("#opensup").click(function(){
-				location.href="/supselectpage/${server}/${guildName}";	 
-			 });
+		 	location.href="/supselectpage/${server}/${guildName}";	 
+		 });
+		 
+		 $("#openatt").click(function(){
+			location.href="/attselectpage/${server}/${guildName}";	 
+		 });
 		 
 		 $('#subGrid').on( 'click', 'tr', function () {
 		     $(this).toggleClass('selected');
