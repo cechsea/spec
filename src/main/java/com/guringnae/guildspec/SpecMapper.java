@@ -29,4 +29,7 @@ public interface SpecMapper {
 	void supchodel(SupDTO dto);
 	List<SpecDTO> attackList_all(Map<String, Object> param);
 	List<SpecDTO> supList_all(Map<String, Object> param);
+	
+	int userAttChk(String nickname);
+	int userSpecChk(String nickname);
 }

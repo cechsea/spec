@@ -159,4 +159,24 @@ public class SpecService {
 		param.put("guild_code", getGuildCode(guild_name, server));
 		return mapper.supList_all(param);
 	}
+	
+	public void gogo(String nickname) {
+		SpecDTO dto = new SpecDTO();
+		dto.setNickname(nickname);
+		mapper.attIns(dto);
+	}
+	
+	public void nono(String nickname) {
+		SpecDTO dto = new SpecDTO();
+		dto.setNickname(nickname);
+		mapper.attDel(dto);
+	}
+	
+	public int userSpecChk(String nickname) {
+		return mapper.userSpecChk(nickname);
+	}
+	
+	public int userAttChk(String nickname) {
+		return mapper.userAttChk(nickname);
+	}
 }

@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -213,5 +215,49 @@ public class HomeController {
 		mav.addObject("server",server);
 		mav.setViewName("home4");
 		return mav;
+	}
+	
+	@RequestMapping(value = "/gogo", method = RequestMethod.GET)
+	@ResponseBody
+	public ModelAndView gogo(){
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("gono", "gogo");
+		mav.setViewName("att");
+		return mav;
+	}
+	
+	@RequestMapping(value = "/nono", method = RequestMethod.GET)
+	@ResponseBody
+	public ModelAndView nono(){
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("gono", "nono");
+		mav.setViewName("att");
+		return mav;
+	}
+	
+	@RequestMapping(value = "/userGoNo", produces = "application/text; charset=utf8", method = RequestMethod.POST)
+	@ResponseBody
+	public String userGoNo(HttpServletRequest request) {
+		String nickName = request.getParameter("nickName");
+		String status = request.getParameter("status");
+		if(status.equals("gogo")) {
+			if(service.userSpecChk(nickName) > 0) {
+				if(service.userAttChk(nickName) > 0) {
+					return "이미 참여신청된 유저입니다.";
+				}else {
+					service.gogo(nickName);
+					return nickName + " 등록완료!";
+				}
+			}else {
+				return "길드에 등록된 유저를 찾을수 없습니다. 길드등록 또는 업데이트를 먼저 진행해주세요.";
+			}
+		}else {
+			if(service.userAttChk(nickName) > 0) {
+				service.nono(nickName);
+				return nickName + " 삭제완료!";
+			}else {
+				return "수로참여에 등록되지않은 유저입니다.";
+			}
+		}
 	}
 }

@@ -364,4 +364,24 @@
     ]]>
     </select>
     
+    <select id="userAttChk" resultType="int">
+    <![CDATA[
+    SELECT
+    COUNT(*)
+    FROM ATTEND
+    WHERE
+    NICKNAME = #{nickname}
+    ]]>
+    </select>
+    
+    <select id="userSpecChk" resultType="int">
+    <![CDATA[
+    SELECT
+    COUNT(*)
+    FROM SPEC
+    WHERE
+    NICKNAME = #{nickname}
+    ]]>
+    </select>
+    
 </mapper>
