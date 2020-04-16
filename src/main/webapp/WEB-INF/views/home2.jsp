@@ -8,12 +8,10 @@
     <link rel="stylesheet" href="/resources/css/jquery-ui.css"/> 
     <link rel="stylesheet" href="/resources/css/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="/resources/css/dataTables.bootstrap.min.css"/>
-    <link rel="stylesheet" href="/resources/css/jquery.modal.min.css"/>
     
     <script src="/resources/js/jquery-3.4.1.min.js" type="text/javascript"></script>
     <script src="/resources/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="/resources/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
-    <script src="/resources/js/jquery.modal.min.js" type="text/javascript"></script>
     
     <meta charset="utf-8" />
 	<title>수로 파티 도우미(${guildName} 관리자 페이지)</title>
