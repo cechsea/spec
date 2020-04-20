@@ -66,6 +66,12 @@ public class HomeController {
 			return service.attList(guild_name, server);
 	}
 	
+	@RequestMapping(value = "/noattselect/{server}/{guild_name}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SpecDTO> noAttSelect(@PathVariable String guild_name, @PathVariable String server){
+			return service.noaSelect(guild_name, server);
+	}
+	
 	@RequestMapping(value="/alldel", method = RequestMethod.POST)
 	@ResponseBody
 	public void allAttDel(@RequestBody SpecDTO list) {
@@ -78,13 +84,13 @@ public class HomeController {
 		service.allSave(list.getGuildName(), list.getServer());
 	}
 	
-	@RequestMapping(value = "/select/{server}/{guild_name}", method = RequestMethod.GET)
+	@RequestMapping(value = "/select/{server}/{guild_name}", method = RequestMethod.GET)	//관리자 수로짜기용
 	@ResponseBody
 	public List<SpecDTO> select(@PathVariable String guild_name, @PathVariable String server){
 		return service.attackList(guild_name, server);
 	}
 	
-	@RequestMapping(value = "/supselect/{server}/{guild_name}", method = RequestMethod.GET)
+	@RequestMapping(value = "/supselect/{server}/{guild_name}", method = RequestMethod.GET)	//관리자 수로짜기용
 	@ResponseBody
 	public List<SpecDTO> supportSelect(@PathVariable String guild_name, @PathVariable String server){
 		return service.supList(guild_name, server);
@@ -217,23 +223,22 @@ public class HomeController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/gogo", method = RequestMethod.GET)
+	@RequestMapping(value = "/s", method = RequestMethod.GET)
 	@ResponseBody
 	public ModelAndView gogo(){
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("gono", "gogo");
 		mav.setViewName("att");
 		return mav;
 	}
 	
-	@RequestMapping(value = "/nono", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/nono", method = RequestMethod.GET)//현재 사용하지않음
 	@ResponseBody
 	public ModelAndView nono(){
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("gono", "nono");
 		mav.setViewName("att");
 		return mav;
-	}
+	}*/
 	
 	@RequestMapping(value = "/userGoNo", produces = "application/text; charset=utf8", method = RequestMethod.POST)
 	@ResponseBody
@@ -246,17 +251,22 @@ public class HomeController {
 					return "이미 참여신청된 유저입니다.";
 				}else {
 					service.gogo(nickName);
-					return nickName + " 등록완료!";
+					return nickName + "님 참여 신청완료!";
 				}
 			}else {
 				return "길드에 등록된 유저를 찾을수 없습니다. 길드등록 또는 업데이트를 먼저 진행해주세요.";
 			}
 		}else {
-			if(service.userAttChk(nickName) > 0) {
-				service.nono(nickName);
-				return nickName + " 삭제완료!";
+			if(service.userNoaChk(nickName) > 0) {
+				if(service.userAttChk(nickName) > 0) {
+					service.noaIns(nickName);
+					return nickName + "님 불참 변경완료!";
+				}else {
+					return "수로참여에 등록되지않은 유저입니다.";
+				}
 			}else {
-				return "수로참여에 등록되지않은 유저입니다.";
+				service.noaIns(nickName);
+				return nickName + "님 불참 등록완료!"; 
 			}
 		}
 	}

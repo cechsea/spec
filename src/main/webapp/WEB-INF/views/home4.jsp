@@ -14,12 +14,13 @@
     <script src="/resources/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
     
     <meta charset="utf-8" />
-	<title>수로 파티 도우미(${guildName} 서포터 직업 선택 페이지)</title>
+	<title>수로 파티 도우미(${guildName} 수로 참여 여부 선택 페이지)</title>
 </head>
 <body>
 <h3>데이터 출처 : maple.gg</h3>
 <h3>수로에 참여하는 길드원을 관리하는 화면입니다.</h3>
 <h3>따로 체크하지않으시면 전체 추가하시면 됩니다.</h3>
+<h3>https://blog.naver.com/cechsea/221912134761 <<-- 길드원 수로 참여여부 직접 선택 사용법</h3>
 <input type="button" onclick="javascript:void(0)" id="home" value="메인으로" >
 <input type="button" onclick="javascript:void(0)" id="admin" value="관리자 화면으로" >
 
@@ -54,16 +55,41 @@
 <table>
 	<tr>
 	<td>
-		<h2>수로에 참여하는 길드원</h2>
+		<h2>참여O 길드원</h2>
 	</td>
 	<td align="right">
+	&nbsp;
+	</td>
+	</tr>
+	<tr>
+	<td colspan="2" style="padding: 0 20 0 0px;">
+	<table id="subGrid"  class="table table-striped table-bordered" >
+	<thead>
+		<tr>
+			<th>닉네임</th>
+			<th>직업</th>
+		</tr>
+	</thead>
+	</table>
+	</td>
+	</tr>
+</table>
+</td>
+<td valign="top">
+<table>
+	<tr>
+	<td>
+		<h2>참여X 길드원</h2>
+	</td>
+	<td align="right">
+	
 	<input type="button" onclick="javascript:void(0)" id="allDel" value="전체 삭제" >
 	<input type="button" onclick="javascript:void(0)" id="admin_att_delete" value="삭제" >
 	</td>
 	</tr>
 	<tr>
 	<td colspan="2">
-	<table id="subGrid"  class="table table-striped table-bordered" >
+	<table id="noattendGrid"  class="table table-striped table-bordered" >
 	<thead>
 		<tr>
 			<th>닉네임</th>
@@ -142,9 +168,42 @@
         bDestroy: true
   });
 	 
+	 $("#noattendGrid").DataTable({
+		 scrollY:500,
+	     ajax: {
+	      "type" : "GET",
+	         "url" : "/noattselect/${server}/${guildName}",
+	            "dataType": "json",
+	            "dataSrc": function (d) {
+	                    return d;
+	            }
+	         },
+	    columns: [
+			    	{ data: "nickname" },
+		            { data: "job" }
+	           ],
+	    columnDefs: [
+	    	{ "width": "250px", "targets": 0 },
+	        { "width": "150px", "targets": 1 }
+	      ],
+	    scrollY: "600px",
+	    scrollX: true,
+	    scrollCollapse: true,
+	    fixedColumns: true,
+ 		lengthChange: false,
+ 		searching: true,
+ 		ordering: false,
+ 		info: false,
+ 		paging: false,
+        bDestroy: true
+  });
+	 
 	
 	 var attTable = $('#attGrid').DataTable();
 	 var subTable = $('#subGrid').DataTable();
+	 var noAttTable = $('#noattendGrid').DataTable();
+	 
+	 
 	 
 	 
 		 
@@ -161,6 +220,9 @@
 		        
 		 });
 		 $('#attGrid').on( 'click', 'tr', function () {
+		     $(this).toggleClass('selected');
+		 });
+		 $('#noattendGrid').on( 'click', 'tr', function () {
 		     $(this).toggleClass('selected');
 		 });
 		 
@@ -196,9 +258,11 @@
 		 });
 		 
 		 $("#admin_att_delete").click(function(){
-		     	var list = subTable.rows('.selected').data().toArray();
+		     	var sub = subTable.rows('.selected').data().toArray();
+		     	var sub2 = noAttTable.rows('.selected').data().toArray();
 		     	
-		     	var sup_cnt = list.length;
+		     	var sup_cnt = sub.length + sub2.length;
+		     	var list = $.merge(sub,sub2);
 		     	
 		     	if(sup_cnt == 0){
 		     		alert("선택된 유저가 없습니다.");

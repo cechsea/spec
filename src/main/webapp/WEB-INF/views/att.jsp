@@ -17,14 +17,19 @@
 	<title>수로 파티 도우미</title>
 </head>
 <body>
+
  <script type="text/javascript"> 
  $(document).ready(function(){
-	 var nic = prompt('[수로 참여or불참]닉네임을 입력해주세요.', '');
-	 var gono = "${gono}";
-	 if(nic == null){
-		 alert("취소!");
-		 location.href="/";
+	 
+	 var nic = prompt('메이플스토리 닉네임을 입력해주세요.', '');
+	 var gono = "";
+	 var chk = confirm(nic + "님 수로에 참여하실경우 확인, 불참일경우 취소를 눌러주세요.");
+	 if(chk){
+		 gono = "gogo";
+	 }else{
+		 gono = "nono";
 	 }
+	 
 	 
 	 $.ajax({
          url         :   "/userGoNo",

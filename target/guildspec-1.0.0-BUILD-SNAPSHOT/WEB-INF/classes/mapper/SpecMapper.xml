@@ -103,6 +103,25 @@
     WHERE
      A.GUILD_CODE = #{guild_code}
      AND NICKNAME NOT IN (SELECT NICKNAME FROM ATTEND)
+     AND NICKNAME NOT IN (SELECT NICKNAME FROM NOATTEND)
+    GROUP BY A.nickname, A.level, A.spec, A.job, A.floor, A.time
+    ORDER BY floor desc, time asc, level desc
+    ]]>
+    </select>
+    
+    <select id="attList" resultMap="spec">
+    <![CDATA[
+    SELECT
+    A.nickname,
+    B.level,
+    B.spec,
+    B.job,
+    B.floor,
+    B.time
+    FROM ATTEND A LEFT JOIN SPEC B ON A.NICKNAME = B.NICKNAME
+    WHERE
+     B.GUILD_CODE = #{guild_code}
+    GROUP BY A.nickname, B.level, B.spec, B.job, B.floor, B.time
     ORDER BY floor desc, time asc, level desc
     ]]>
     </select>
@@ -119,6 +138,24 @@
     FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
     WHERE
      A.GUILD_CODE = #{guild_code}
+    GROUP BY A.nickname, A.level, A.spec, A.job, A.floor, A.time
+    ORDER BY floor desc, time asc, level desc
+    ]]>
+    </select>
+    
+    <select id="allLists2" resultMap="spec" >
+    <![CDATA[
+    SELECT
+    A.nickname,
+    A.level,
+    A.spec,
+    A.job,
+    A.floor,
+    A.time
+    FROM SPEC A INNER JOIN NOATTEND B ON A.NICKNAME = B.NICKNAME
+    WHERE
+     A.GUILD_CODE = #{guild_code}
+    GROUP BY A.nickname, A.level, A.spec, A.job, A.floor, A.time
     ORDER BY floor desc, time asc, level desc
     ]]>
     </select>
@@ -133,7 +170,7 @@
     A.floor,
     A.time,
     A.guild_code
-    FROM SPEC A 
+    FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
     WHERE
     	1 = 1
     ]]>
@@ -146,6 +183,8 @@
     <![CDATA[
     AND A.GUILD_CODE = #{guild_code}
     AND A.NICKNAME NOT IN (SELECT NICKNAME FROM SURO WHERE GUILD_CODE = #{guild_code})
+    AND A.NICKNAME NOT IN (SELECT NICKNAME FROM NOATTEND)
+    GROUP BY A.nickname, A.level, A.spec, A.job, A.floor, A.time, A.guild_code
     ORDER BY floor desc, time asc, level desc
     ]]>
     </select>
@@ -160,7 +199,7 @@
     A.floor,
     A.time,
     A.guild_code
-    FROM SPEC A 
+    FROM SPEC A INNER JOIN ATTEND B ON A.NICKNAME = B.NICKNAME
     WHERE
     1 = 1
     	]]>
@@ -176,6 +215,8 @@
     <![CDATA[
     AND A.GUILD_CODE = #{guild_code}
     AND A.NICKNAME NOT IN (SELECT NICKNAME FROM SURO WHERE GUILD_CODE = #{guild_code})
+    AND A.NICKNAME NOT IN (SELECT NICKNAME FROM NOATTEND)
+    GROUP BY A.nickname, A.level, A.spec, A.job, A.floor, A.time, A.guild_code
     ORDER BY floor desc, time asc, level desc
     ]]>
     </select>
@@ -239,6 +280,7 @@
     WHERE
     A.GUILD_CODE = #{guild_code}
     AND A.SURO = #{suro}
+    GROUP BY A.NICKNAME, A.GUILD_CODE, A.SURO, B.JOB
     ]]>
     </select>
     
@@ -281,6 +323,7 @@
     FROM SUP
     WHERE
     GUILD_CODE = #{guild_code}
+    GROUP BY JOB, GUILD_CODE
     ]]>
     </select>
     
@@ -315,6 +358,7 @@
    	</if>
     <![CDATA[
     AND A.GUILD_CODE = #{guild_code}
+    GROUP BY A.nickname, A.level, A.spec, A.job, A.floor, A.time, A.guild_code
     ORDER BY floor desc, time asc, level desc
     ]]>
     </select>
@@ -344,6 +388,74 @@
         </if>
     <![CDATA[
     AND A.GUILD_CODE = #{guild_code}
+    GROUP BY A.nickname, A.level, A.spec, A.job, A.floor, A.time, A.guild_code
+    ORDER BY floor desc, time asc, level desc
+    ]]>
+    </select>
+    
+    <select id="userAttChk" resultType="int">
+    <![CDATA[
+    SELECT
+    COUNT(*)
+    FROM ATTEND
+    WHERE
+    NICKNAME = #{nickname}
+    ]]>
+    </select>
+    
+    <select id="userSpecChk" resultType="int">
+    <![CDATA[
+    SELECT
+    COUNT(*)
+    FROM SPEC
+    WHERE
+    NICKNAME = #{nickname}
+    ]]>
+    </select>
+    
+    <select id="userNoaChk" resultType="int">
+    <![CDATA[
+    SELECT
+    COUNT(*)
+    FROM NOATTEND
+    WHERE
+    NICKNAME = #{nickname}
+    ]]>
+    </select>
+    
+    <insert id="noaIns">
+    <![CDATA[
+    INSERT INTO NOATTEND
+    (
+    NICKNAME
+    )VALUES(
+    #{nickname}
+    )
+    ]]>
+    </insert>
+    
+    <delete id="noaDel">
+    <![CDATA[
+    DELETE 
+	FROM NOATTEND
+	WHERE
+	NICKNAME = #{nickname}
+    ]]>
+    </delete>
+    
+    <select id="noaSelect" resultMap="spec">
+    <![CDATA[
+    SELECT
+    A.nickname,
+    B.level,
+    B.spec,
+    B.job,
+    B.floor,
+    B.time
+    FROM NOATTEND A LEFT JOIN SPEC B ON A.NICKNAME = B.NICKNAME
+    WHERE
+     B.GUILD_CODE = #{guild_code}
+    GROUP BY A.nickname, B.level, B.spec, B.job, B.floor, B.time
     ORDER BY floor desc, time asc, level desc
     ]]>
     </select>

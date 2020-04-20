@@ -14,7 +14,9 @@ public interface SpecMapper {
 	String lastUdt(String guild_code);
 	List<SpecDTO> allList(String guild_code); 
 	List<SpecDTO> attList(String guild_code);
+	List<SpecDTO> noaSelect(String guild_code);
 	List<SpecDTO> allLists(String guild_code);
+	List<SpecDTO> allLists2(String guild_code);
 	List<SpecDTO> attackList(Map<String, Object> param);
 	List<SpecDTO> supList(Map<String, Object> param);
 	void specDelete(String guild_code); 
@@ -30,6 +32,9 @@ public interface SpecMapper {
 	List<SpecDTO> attackList_all(Map<String, Object> param);
 	List<SpecDTO> supList_all(Map<String, Object> param);
 	
+	void noaIns(SpecDTO dto);
+	void noaDel(SpecDTO dto);
 	int userAttChk(String nickname);
 	int userSpecChk(String nickname);
+	int userNoaChk(String nickname);
 }

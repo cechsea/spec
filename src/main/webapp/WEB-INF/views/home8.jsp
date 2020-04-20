@@ -20,8 +20,9 @@
 <h3>데이터 출처 : maple.gg</h3>
 <h3>최근 저장 : ${udtTime}</h3>
 <h3>선택한 서포터 직업 : ${choicesup}</h3>
+<h3>https://blog.naver.com/cechsea/221912134761 <<-- 길드원 수로 참여여부 직접 선택 사용법</h3>
 <input type="button" onclick="javascript:void(0)" id="specUdt" value="업데이트" >
-<input type="button" onclick="javascript:void(0)" id="admin" value="관리자페이지(개발중...)" >
+<input type="button" onclick="javascript:void(0)" id="admin" value="관리자페이지" >
 
 <table>
 <tr>

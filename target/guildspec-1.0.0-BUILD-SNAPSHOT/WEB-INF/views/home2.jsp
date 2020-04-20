@@ -8,12 +8,10 @@
     <link rel="stylesheet" href="/resources/css/jquery-ui.css"/> 
     <link rel="stylesheet" href="/resources/css/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="/resources/css/dataTables.bootstrap.min.css"/>
-    <link rel="stylesheet" href="/resources/css/jquery.modal.min.css"/>
     
     <script src="/resources/js/jquery-3.4.1.min.js" type="text/javascript"></script>
     <script src="/resources/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="/resources/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
-    <script src="/resources/js/jquery.modal.min.js" type="text/javascript"></script>
     
     <meta charset="utf-8" />
 	<title>수로 파티 도우미(${guildName} 관리자 페이지)</title>
@@ -24,6 +22,7 @@
 <input type="button" onclick="javascript:void(0)" id="specUdt" value="업데이트" >
 <input type="button" onclick="javascript:void(0)" id="home" value="메인으로" >
 <input type="button" onclick="javascript:void(0)" id="opensup" value="서포터 직업 선택" >
+<input type="button" onclick="javascript:void(0)" id="openatt" value="수로 참여자 선택" >
 
 <table>
 	<tr>
@@ -403,8 +402,12 @@
 		 });
 		 
 		 $("#opensup").click(function(){
-				location.href="/supselectpage/${server}/${guildName}";	 
-			 });
+		 	location.href="/supselectpage/${server}/${guildName}";	 
+		 });
+		 
+		 $("#openatt").click(function(){
+			location.href="/attselectpage/${server}/${guildName}";	 
+		 });
 		 
 		 $('#subGrid').on( 'click', 'tr', function () {
 		     $(this).toggleClass('selected');

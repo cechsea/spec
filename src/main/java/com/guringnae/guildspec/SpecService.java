@@ -34,6 +34,7 @@ public class SpecService {
 	public void attDel(List<SpecDTO> list) {
 		for(SpecDTO dto : list) {
 			mapper.attDel(dto);
+			mapper.noaDel(dto);
 		}
 	}
 	
@@ -49,6 +50,10 @@ public class SpecService {
 		return mapper.attList(getGuildCode(guild_name, server));
 	}
 	
+	public List<SpecDTO> noaSelect(String guild_name, String server){
+		return mapper.noaSelect(getGuildCode(guild_name, server));
+	}
+	
 	public void allSave(String guild_name, String server) {
 		List<SpecDTO> list = mapper.allList(getGuildCode(guild_name, server));
 		for(SpecDTO dto : list) {
@@ -60,6 +65,10 @@ public class SpecService {
 		List<SpecDTO> list = mapper.allLists(getGuildCode(guild_name, server));
 		for(SpecDTO dto : list) {
 			mapper.attDel(dto);
+		}	
+		List<SpecDTO> list2 = mapper.allLists2(getGuildCode(guild_name, server));
+		for(SpecDTO dto : list2) {
+			mapper.noaDel(dto);
 		}	
 	}
 	
@@ -164,6 +173,7 @@ public class SpecService {
 		SpecDTO dto = new SpecDTO();
 		dto.setNickname(nickname);
 		mapper.attIns(dto);
+		mapper.noaDel(dto);
 	}
 	
 	public void nono(String nickname) {
@@ -178,5 +188,16 @@ public class SpecService {
 	
 	public int userAttChk(String nickname) {
 		return mapper.userAttChk(nickname);
+	}
+	
+	public int userNoaChk(String nickname) {
+		return mapper.userNoaChk(nickname);
+	}
+	
+	public void noaIns(String nickname) {
+		SpecDTO dto = new SpecDTO();
+		dto.setNickname(nickname);
+		mapper.noaIns(dto);
+		nono(nickname);
 	}
 }
